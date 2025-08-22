@@ -160,8 +160,8 @@
         const charsWritten = daysFromStart * CHARS_PER_DAY;
 
         $('count').textContent = `${daysFromStart}日目`;
-        $('desc').textContent = `${fmt.format(start)}からの経過日数です。`;
-        $('chars').textContent = `1日100文字の日記なら、これまでに約 ${charsWritten.toLocaleString()} 文字書いたことになります。`;
+        $('desc').textContent = `日記を書き始めてからの経過日数です。`;
+        $('chars').textContent = `1日100文字なら、これまでに約 ${charsWritten.toLocaleString()} 文字書きました。`;
         $('start').textContent = fmt.format(start);
         $('today').textContent = fmt.format(today);
 
