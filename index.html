@@ -44,6 +44,7 @@
       color: var(--text);
       letter-spacing: 0.02em;
       margin: 0 0 10px;
+      flex-wrap: wrap;
     }
     .pill {
       font-size: .85rem;
@@ -106,6 +107,23 @@
     .hint { color: var(--muted); font-size: .9rem; }
     .sep { height: 1px; background: rgba(255,255,255,.08); margin: 16px 0; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    /* スマホビュー最適化 */
+    @media (max-width: 600px) {
+      .dates {
+        grid-template-columns: 1fr;
+      }
+      .title {
+        font-size: 1.2rem;
+      }
+      .counter {
+        font-size: 2.4rem;
+      }
+      .card {
+        padding: 20px;
+        border-radius: 16px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -114,6 +132,7 @@
       <h1 id="title" class="title">📔 8月13日から今日で何日目？ <span class="pill" id="tz-pill" aria-live="polite"></span></h1>
       <div class="counter" id="count" aria-live="polite" aria-atomic="true">…</div>
       <p class="sub" id="desc">読み込み中…</p>
+      <p class="sub" id="chars">日記の文字数を計算中…</p>
 
       <div class="dates" aria-describedby="title">
         <div class="row"><span class="label">開始日</span><span id="start"></span></div>
@@ -133,6 +152,7 @@
     (function () {
       const REF_MONTH = 8;  // 8月
       const REF_DAY = 13;   // 13日
+      const CHARS_PER_DAY = 100;
 
       const $ = (id) => document.getElementById(id);
       const fmt = new Intl.DateTimeFormat(undefined, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' });
@@ -153,10 +173,12 @@
         const start = atLocalMidnight(getStartDateForToday(today));
         const diffMs = today - start; // 00:00 同士で安全に計算
         const daysFromStart = Math.floor(diffMs / 86_400_000) + 1; // 開始日を1日目
+        const charsWritten = daysFromStart * CHARS_PER_DAY;
 
         // UI 更新
         $('count').textContent = `${daysFromStart}日目`;
         $('desc').textContent = `日記開始（${fmt.format(start)}）からの経過日数です。`;
+        $('chars').textContent = `1日100字なら、これまでに約 ${charsWritten.toLocaleString()} 文字書いたことになります。`;
         $('start').textContent = fmt.format(start);
         $('today').textContent = fmt.format(today);
 
